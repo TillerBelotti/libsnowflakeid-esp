@@ -1,51 +1,69 @@
-# libsnowflakeid
+# libsnowflakeid-esp
 
-[![Latest release](https://img.shields.io/badge/latest_release-1.3.0-orange.svg)](https://github.com/thibaultmeyer/libsnowflakeid/releases)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/thibaultmeyer/libsnowflakeid/blob/master/LICENSE)
-[![CodeFactor](https://www.codefactor.io/repository/github/thibaultmeyer/libsnowflakeid/badge)](https://www.codefactor.io/repository/github/thibaultmeyer/libsnowflakeid)
-[![Repository size](https://img.shields.io/github/repo-size/thibaultmeyer/libsnowflakeid.svg?logo=git)](https://github.com/thibaultmeyer/libsnowflakeid)
+Snowflake ID generator component for ESP-IDF.
 
-A tiny and portable library to generate Snowflake IDs.
-*****
+Based on [thibaultmeyer/libsnowflakeid](https://github.com/thibaultmeyer/libsnowflakeid).
 
-## Build & install from sources
-To compile and install this project, you must ensure that make, cmake, gcc or
-clang or MSVC are being correctly installed.
+## Installation
 
-```bash
-#> mkdir cmake-build-release
-#> cd cmake-build-release
-#> cmake -DCMAKE_BUILD_TYPE=Release ..
-#> make
-#> make install
+Add to your project’s `idf_component.yml`:
+
+```yaml
+dependencies:
+  libsnowflakeid-esp:
+    git: https://github.com/TillerBelotti/libsnowflakeid-esp.git
 ```
 
-## Usage
-```c
-#include <snowflakeid.h>
+Or clone directly into your `components/` directory.
 
-int main(const int argc, const char *const *argv) {
-    enum e_snowflakeid_init_status     status_out;
-    struct s_snowflakeid_generator_ctx *ctx = snowflakeid_initialize(
-            datacenter_id,
-            worker_id,
-            offset_time_ms,
-            &status_out);
-    
-    if (status_out == SNOWFLAKEID_INIT_SUCCESS) {
-        uint64_t id = snowflakeid_next_value(ctx);
-        
-        snowflakeid_destroy(ctx);
+## Usage
+
+```c
+#include <inttypes.h>
+#include "snowflakeid.h"
+
+void app_main(void)
+{
+    esp_err_t err;
+
+    // Initialize generator (datacenter_id=1, worker_id=1, offset=0)
+    // Offset must be <= current system time at initialization.
+    libsnowflakeid_handle_t handle = snowflakeid_initialize(1, 1, 0, &err);
+    if (err != ESP_OK) {
+        // Handle error
+        return;
     }
-    
-    return (0);
+
+    // Generate ID
+    snowflakeid_t id = snowflakeid_generate(handle, &err);
+    if (err == ESP_OK) {
+        printf("Generated ID: %" PRIu64 "\n", id);
+        printf("  Timestamp: %" PRIu64 "\n", snowflakeid_get_timestamp(&id));
+        printf("  Datacenter: %u\n", snowflakeid_get_datacenter_id(&id));
+        printf("  Worker: %u\n", snowflakeid_get_worker_id(&id));
+        printf("  Sequence: %u\n", snowflakeid_get_sequence(&id));
+    }
+
+    // Cleanup
+    snowflakeid_destroy(handle);
 }
 ```
 
-```bash
-#> cc example.c -lsnowflakeid
-```
+## API
 
+| Function                            | Description                                                             |
+|-------------------------------------|-------------------------------------------------------------------------|
+| `snowflakeid_initialize`            | Create generator (datacenter 0-31, worker 0-31, offset <= current time) |
+| `snowflakeid_generate`              | Generate unique ID                                                      |
+| `snowflakeid_destroy`               | Free resources                                                          |
+| `snowflakeid_get_timestamp`         | Extract timestamp from ID                                               |
+| `snowflakeid_get_datacenter_id`     | Extract datacenter ID                                                   |
+| `snowflakeid_get_worker_id`         | Extract worker ID                                                       |
+| `snowflakeid_get_sequence`          | Extract sequence number                                                 |
+| `snowflakeid_get_max_datacenter_id` | Get max datacenter ID (31)                                              |
+| `snowflakeid_get_max_worker_id`     | Get max worker ID (31)                                                  |
+| `snowflakeid_get_max_sequence`      | Get max sequence number (4095)                                          |
 
 ## License
-This project is released under terms of the [MIT license](https://github.com/thibaultmeyer/libsnowflakeid/blob/master/LICENSE).
+
+MIT License - See [LICENSE](LICENSE)
