@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document explains how to contribute changes to the chip8-emulator project.
+This document explains how to contribute changes to the libsnowflakeid-esp project.
 
 
 
@@ -12,16 +12,16 @@ This document explains how to contribute changes to the chip8-emulator project.
 Please search the issues on the issue tracker with a variety of keywords to
 ensure your bug is not already reported.
 
-If unique, [open an issue](https://github.com/thibaultmeyer/libsnowflakeid/issues) and answer the questions
+If unique, [open an issue](https://github.com/TillerBelotti/libsnowflakeid-esp/issues)
 so we can understand and reproduce the problematic behavior.
 
 The burden is on you to convince us that it is actually a bug in
-chip8-emulator. This is easiest to do when you write clear, concise
+libsnowflakeid-esp. This is easiest to do when you write clear, concise
 instructions so we can reproduce the behavior (even if it seems obvious). The
 more detailed and specific you are, the faster we will be able to help you.
 Check out [How to Report Bugs Effectively](https://www.chiark.greenend.org.uk/~sgtatham/bugs.html).
 
-Please be kind, remember that chip8-emulator comes at no cost to you,
+Please be kind, remember that libsnowflakeid-esp comes at no cost to you,
 and you're getting free help.
 
 
@@ -29,7 +29,7 @@ and you're getting free help.
 
 ## Code review
 
-Changes to chip8-emulator must be reviewed before they are accepted,
+Changes to libsnowflakeid-esp must be reviewed before they are accepted,
 no matter who makes the change even if it is an owner or a maintainer. We use
 GitHub's pull request workflow to do that.
 
@@ -74,7 +74,7 @@ A good commit message serve at least three important purposes:
 
 * To help us write a good release note.
 
-* To help the future maintainers of chip8-emulator, say five years
+* To help the future maintainers of libsnowflakeid-esp, say five years
   into the future, to find out why a particular change was made to the code or
   why a specific feature was added.
 
